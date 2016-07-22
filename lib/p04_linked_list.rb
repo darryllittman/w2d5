@@ -14,6 +14,8 @@ class Link
 end
 
 class LinkedList
+  include Enumerable
+
   def initialize
     @head = Link.new
     @tail = Link.new
@@ -40,9 +42,14 @@ class LinkedList
   end
 
   def get(key)
+    each { |link| return link.val if link.key == key }
   end
 
   def include?(key)
+    # found_link = nil
+    # each { |link| found_link = link if link.key == key }
+    # found_link.any?
+    !get(key).nil?
   end
 
   def insert(key, val)
@@ -59,20 +66,29 @@ class LinkedList
   end
 
   def remove(key)
+    old_link = nil
+    each { |link| old_link = link; break if link.key == key }
+
+    prev_link = old_link.prev
+    next_link = old_link.next
+
+    prev_link.next = next_link
+    next_link.prev = prev_link
   end
 
-  def each
+  def each(&prc)
     i = @head.next
-    until i == nil
-      p i.val
+    until i.val == nil
+
+      prc.call(i)
       i = i.next
     end
   end
 
   # uncomment when you have `each` working and `Enumerable` included
-  # def to_s
-  #   inject([]) { |acc, link| acc << "[#{link.key}, #{link.val}]" }.join(", ")
-  # end
+  def to_s
+    inject([]) { |acc, link| acc << "[#{link.key}, #{link.val}]" }.join(", ")
+  end
 end
 
 if __FILE__ == $PROGRAM_NAME
