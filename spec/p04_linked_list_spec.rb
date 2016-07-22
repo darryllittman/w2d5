@@ -1,3 +1,4 @@
+require 'byebug'
 require 'rspec'
 require_relative 'spec_helper'
 require 'p04_linked_list'
@@ -24,8 +25,8 @@ describe LinkedList do
     end
   end
 
-  describe "#insert" do 
-    it "inserts links" do 
+  describe "#insert" do
+    it "inserts links" do
       empty_list.insert(:first, 1)
       expect(empty_list.empty?).to be false
     end
