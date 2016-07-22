@@ -15,6 +15,7 @@ end
 
 class LinkedList
   def initialize
+    
   end
 
   def [](i)
