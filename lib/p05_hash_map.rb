@@ -1,5 +1,6 @@
 require_relative 'p02_hashing'
 require_relative 'p04_linked_list'
+require 'byebug'
 
 class HashMap
   attr_reader :count
@@ -10,18 +11,35 @@ class HashMap
   end
 
   def include?(key)
+    bucket(key).include?(key)
   end
 
   def set(key, val)
+    if bucket(key).include?(key)
+      bucket(key).remove(key)
+    else
+      @count += 1
+    end
+
+    bucket(key).insert(key, val)
   end
 
   def get(key)
+    target_link = bucket(key).select { |link| link.key == key }
+    target_link.empty? ? nil : target_link.first.val
   end
 
   def delete(key)
+    @count -= 1
+    bucket(key).remove(key)
   end
 
-  def each
+  def each(&prc)
+    i = bucket.head.next
+    until i == self.tail
+      prc.call(i.key, i.val)
+      i = i.next
+    end
   end
 
   # uncomment when you have Enumerable included
@@ -45,6 +63,8 @@ class HashMap
   end
 
   def bucket(key)
+    i = key.hash % num_buckets
+    @store[i]
     # optional but useful; return the bucket corresponding to `key`
   end
 end
